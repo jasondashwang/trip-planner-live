@@ -148,7 +148,7 @@ $(function initializeMap (){
 
       var newDay = 'day' + currentIndex;
 
-      var template = '<div class="panel-body ' + newDay + ' hidden"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="currentRestaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="currentActivities"></ul></div></div>';
+      var template = '<div class="panel-body ' + newDay + ' hidden"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="' + newDay + 'Activities""></ul></div></div>';
 
       $('#itinerary').append(template);
 
@@ -213,7 +213,7 @@ $(function initializeMap (){
 
     if (allButtons.length === 2){
       var newDay = 1;
-      var template = '<div class="panel-body day' + newDay + ' current"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="currentRestaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="currentActivities"></ul></div></div>';
+      var template = '<div class="panel-body day' + newDay + ' current"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day1Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day1Activities"></ul></div></div>';
       $('.day1').remove();
       $('#itinerary').append(template);
 
