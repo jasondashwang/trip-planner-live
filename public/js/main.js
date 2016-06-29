@@ -57,6 +57,16 @@ $(function initializeMap (){
     });
     marker.setMap(currentMap);
     markers.push(marker);
+
+    resize(markers);
+  }
+
+  function resize(arr){
+    var bounds = new google.maps.LatLngBounds();
+      markers.forEach(function (mark) { 
+      bounds.extend(mark.position)
+    });
+    currentMap.fitBounds(bounds)
   }
 
   function clearMarkers (){
@@ -64,7 +74,9 @@ $(function initializeMap (){
       markers[i].setMap(null);
     }
     markers = [];
-  }
+   // currentMap.panTo(fullstackAcademy)
+
+   }
 
   // Jquery Stuff Below
 
@@ -85,9 +97,11 @@ $(function initializeMap (){
         if((targetLat === lat) && (targetLong === long)){
           markers[i].setMap(null);
           markers.splice(i, 1);
+          break;
         }
       }
       div.remove();
+      resize(markers);
     });
 
   //add hotels
