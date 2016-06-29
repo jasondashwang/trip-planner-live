@@ -49,7 +49,7 @@ $('.day-buttons').on('click', '.btn', function (event) {
   var $target = $(event.target);
 
   //remove current day class and add it to target clicked unless target was day add button
-  
+
   if (!( $target.is('#day-add') )){
     $('.current-day').removeClass('current-day');
     $target.addClass('current-day');
@@ -70,7 +70,7 @@ $('.day-buttons').on('click', '.btn', function (event) {
   var removingDay = dayArray.join('');
 
   $('.' + removingDay).remove();
-  var allButtons = $('.day-buttons').children(); 
+  var allButtons = $('.day-buttons').children();
 
   if (allButtons.length === 2){
     var newDay = 1;
@@ -92,11 +92,11 @@ $('.day-buttons').on('click', '.btn', function (event) {
       var button = $(allButtons[z]);
       var buttonText = +(button.text()) - 1;
       button.text(buttonText);
-      var $targetPanel = $('.day' + z);
-      $targetPanel.find('#day' + z + 'Hotels').removeAttr('id').attr('id', 'day' + (z-1) + 'Hotels');
-      $targetPanel.find('#day' + z + 'Restaurants').removeAttr('id').attr('id', 'day' + (z-1) + 'Restaurants');
-      $targetPanel.find('#day' + z + 'Activities').removeAttr('id').attr('id', 'day' + (z-1) + 'Activities');
-      $targetPanel.removeClass('day' + z).addClass('day'+ (z-1)); 
+      var $targetPanel = $('.day' + (z+1));
+      $targetPanel.find('#day' + (z+1) + 'Hotels').removeAttr('id').attr('id', 'day' + z + 'Hotels');
+      $targetPanel.find('#day' + (z+1) + 'Restaurants').removeAttr('id').attr('id', 'day' + z + 'Restaurants');
+      $targetPanel.find('#day' + (z+1) + 'Activities').removeAttr('id').attr('id', 'day' + z + 'Activities');
+      $targetPanel.removeClass('day'+ (z+1)).addClass('day'+ z);
     }
 
     $('.current-day').trigger('click');
