@@ -74,7 +74,8 @@ $(function initializeMap (){
       markers[i].setMap(null);
     }
     markers = [];
-   // currentMap.panTo(fullstackAcademy)
+   currentMap.panTo(fullstackAcademy);
+   currentMap.setZoom(13);
 
    }
 
@@ -243,8 +244,9 @@ $(function initializeMap (){
         $targetPanel.removeClass('day'+ (z+1)).addClass('day'+ z);
       }
 
-      $('.current-day').trigger('click');
+
     }
+    $('.current-day').trigger('click');
   });
 });
 
