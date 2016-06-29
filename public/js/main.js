@@ -63,7 +63,7 @@ $(function initializeMap (){
 
   function resize(arr){
     var bounds = new google.maps.LatLngBounds();
-      markers.forEach(function (mark) { 
+      markers.forEach(function (mark) {
       bounds.extend(mark.position)
     });
     currentMap.fitBounds(bounds)
@@ -79,9 +79,7 @@ $(function initializeMap (){
    }
 
   // Jquery Stuff Below
-
-
-    $('.listRestaurants, .listActivities, .listHotels').on('click', '.remove' ,function(){
+  function removeEvent(){
       var div = $(this).parent();
 
       var id = div.data('value');
@@ -102,7 +100,11 @@ $(function initializeMap (){
       }
       div.remove();
       resize(markers);
-    });
+  }
+
+
+
+    $('.listRestaurants, .listActivities, .listHotels').on('click', '.remove' , removeEvent);
 
   //add hotels
     $('#hotelButton').on('click', function(){
@@ -146,11 +148,13 @@ $(function initializeMap (){
       $('<button class = "btn btn-circle day-btn">' + currentIndex + '</button>').insertBefore(this).css('margin', '2px');
       $(this).css('margin-left', '2px');
 
-      var newDay = 'day' + currentIndex;
+      var newDay = currentIndex;
 
-      var template = '<div class="panel-body ' + newDay + ' hidden"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="' + newDay + 'Activities""></ul></div></div>';
+      var template = '<div class="panel-body day' + newDay + ' hidden"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="day' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day' + newDay + 'Activities""></ul></div></div>';
 
       $('#itinerary').append(template);
+
+      $('.day' + newDay).find('.listActivities, .listRestaurants, .listHotels').on('click', '.remove', removeEvent);
 
     });
 
@@ -213,9 +217,10 @@ $(function initializeMap (){
 
     if (allButtons.length === 2){
       var newDay = 1;
-      var template = '<div class="panel-body day' + newDay + ' current"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day1Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day1Activities"></ul></div></div>';
+      var template = '<div class="panel-body day' + newDay + ' current"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="day' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day' + newDay + 'Activities""></ul></div></div>';
       $('.day1').remove();
       $('#itinerary').append(template);
+      $('.day' + newDay).find('.listActivities, .listRestaurants, .listHotels').on('click', '.remove', removeEvent);
 
     } else {
       for (var i = 0; i < allButtons.length; i ++) {
