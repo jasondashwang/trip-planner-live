@@ -25,7 +25,7 @@ $(document).ready(function(){
   $('#activityButton').on('click', function(){
     var activity = $('#activity-choices').val();
     $('#currentActivities').append('<div class="itinerary-item"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
-  });g
+  });
 //add day buttons 
   $('#day-add').on('click', function () {
     //get the number of the about to be created button
@@ -41,10 +41,12 @@ $(document).ready(function(){
 $('.day-buttons').on('click', function (event) {
   //remove current day class and add it to target clicked unless target was day add button 
   if (!( $(event.target).is('#day-add') )){
-    $('.current-day').removeClass('current-day')
-    $(event.target).addClass('current-day')
+    $('.current-day').removeClass('current-day');
+    $(event.target).addClass('current-day');
   }
 });
+
+
 
 
 
