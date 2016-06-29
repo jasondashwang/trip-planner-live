@@ -46,6 +46,8 @@ $(function initializeMap (){
     activity: '/images/star-3.png'
   };
 
+  var markers = [];
+
   function drawMarker (type, coords) {
     var latLng = new google.maps.LatLng(coords[0], coords[1]);
     var iconURL = iconURLs[type];
@@ -54,25 +56,49 @@ $(function initializeMap (){
       position: latLng
     });
     marker.setMap(currentMap);
+    markers.push(marker);
   }
 
+  function clearMarkers (){
+    for(var i = 0; i<markers.length; i++){
+      markers[i].setMap(null);
+    }
+    markers = [];
+  }
 
-   $('#currentRestaurants').on('click', '.remove' ,function(){
-      $(this).parent().remove();
+  // Jquery Stuff Below
+
+
+    $('.listRestaurants, .listActivities, .listHotels').on('click', '.remove' ,function(){
+      var div = $(this).parent();
+
+      var id = div.data('value');
+
+      var location = $('#'+id).data('value').split(',');
+
+      var targetLat = +((+(location[0])).toFixed(5));
+      var targetLong = +((+(location[1])).toFixed(5));
+
+      for (var i = 0; i < markers.length; i++) {
+        var lat = +(markers[i].position.lat().toFixed(5));
+        var long = +(markers[i].position.lng().toFixed(5));
+        if((targetLat === lat) && (targetLong === long)){
+          markers[i].setMap(null);
+          markers.splice(i, 1);
+        }
+      }
+      div.remove();
     });
-  //remove activities
-    $('#currentActivities').on('click', '.remove' ,function(){
-      $(this).parent().remove();
-    });
-  //remove hotels
-    $('#currentHotels').on('click', '.remove' ,function(){
-      $(this).parent().remove();
-    });
+
   //add hotels
     $('#hotelButton').on('click', function(){
       var hotel = $('#hotel-choices').val();
       var hotelId = $('#hotel-choices option:selected').attr('id');
       $('.current').find('.listHotels').append('<div class="itinerary-item" data-value="' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+
+      var location = $('#' + hotelId).data('value').split(',');
+
+      drawMarker('hotel', location);
     });
   //add restaurants
     $('#restaurantButton').on('click', function(){
@@ -90,7 +116,12 @@ $(function initializeMap (){
       var activity = $('#activity-choices').val();
       var activityId = $('#activity-choices option:selected').attr('id');
       $('.current').find('.listActivities').append('<div class="itinerary-item" data-value="' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+
+      var location = $('#' + activityId).data('value').split(',');
+
+      drawMarker('activity', location);
     });
+
   //add day buttons
     $('#day-add').on('click', function () {
       //get the number of the about to be created button
@@ -108,14 +139,16 @@ $(function initializeMap (){
       $('#itinerary').append(template);
 
     });
-  });
+
   //change current-day class to button clicked
   $('.day-buttons').on('click', '.btn', function (event) {
     var $target = $(event.target);
-
     //remove current day class and add it to target clicked unless target was day add button
 
     if (!( $target.is('#day-add') )){
+
+      clearMarkers();
+
       $('.current-day').removeClass('current-day');
       $target.addClass('current-day');
 
@@ -123,12 +156,39 @@ $(function initializeMap (){
 
       var newDay = '.day' + $target.text();
 
-      $(newDay).removeClass('hidden').addClass('current');
+      var targetPanel = $(newDay).removeClass('hidden').addClass('current');
       var currentDay = 'Day ' + $target.text();
-      $('#day-span').text(currentDay)
+      $('#day-span').text(currentDay);
+
+      var hotelArr = targetPanel.find('.listHotels').children();
+      var restaurantArr = targetPanel.find('.listRestaurants').children();
+      var activityArr = targetPanel.find('.listActivities').children();
+
+      for (var i = 0; i < hotelArr.length; i++) {
+        var $hotel = $(hotelArr[i]);
+        var id = $hotel.data('value');
+        var location = $('#'+ id).data('value').split(',');
+        drawMarker('hotel', location);
+      }
+
+      for (var i = 0; i < restaurantArr.length; i++) {
+        var $restaurant = $(restaurantArr[i]);
+        var id = $restaurant.data('value');
+        var location = $('#'+ id).data('value').split(',');
+        drawMarker('restaurant', location);
+      }
+
+      for (var i = 0; i < activityArr.length; i++) {
+        var $activity = $(activityArr[i]);
+        var id = $activity.data('value');
+        var location = $('#'+ id).data('value').split(',');
+        drawMarker('activity', location);
+      }
     }
   });
 
+
+  // Remove Page
    $('#day-title').find('.remove').on('click', function () {
     var dayArray = $('#day-span').text().toLowerCase().split(' ');
     var dayNumber = dayArray[1];
@@ -166,7 +226,7 @@ $(function initializeMap (){
 
       $('.current-day').trigger('click');
     }
-
+  });
 });
 
 
