@@ -1,7 +1,18 @@
 var express = require('express');
 var router = express.Router();
-var Hotel = require('../models/hotel');
-var Place = require('../models/place');
+var Hotel = require('../../models/hotel');
+var Place = require('../../models/place');
 var Promise = require('bluebird');
+
+router.get('/hotels' , function (req, res, next) {
+  var findingHotels = Hotel.findAll({
+    include: [Place]
+  });
+
+  findingHotels.then(function(result){
+    res.send(result);
+  });
+
+});
 
 module.exports = router;

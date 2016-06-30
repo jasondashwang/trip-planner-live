@@ -63,7 +63,7 @@ $(function initializeMap (){
 
   function resize(arr){
     var bounds = new google.maps.LatLngBounds();
-      markers.forEach(function (mark) {
+    markers.forEach(function (mark) {
       bounds.extend(mark.position)
     });
     currentMap.fitBounds(bounds)
@@ -74,73 +74,73 @@ $(function initializeMap (){
       markers[i].setMap(null);
     }
     markers = [];
-   currentMap.panTo(fullstackAcademy);
-   currentMap.setZoom(13);
+    currentMap.panTo(fullstackAcademy);
+    currentMap.setZoom(13);
 
-   }
+  }
 
   // Jquery Stuff Below
   function removeEvent(){
-      var div = $(this).parent();
+    var div = $(this).parent();
 
-      var id = div.data('value');
+    var id = div.data('value');
 
-      var location = $('#'+id).data('value').split(',');
+    var location = $('#'+id).data('value').split(',');
 
-      var targetLat = +((+(location[0])).toFixed(5));
-      var targetLong = +((+(location[1])).toFixed(5));
+    var targetLat = +((+(location[0])).toFixed(5));
+    var targetLong = +((+(location[1])).toFixed(5));
 
-      for (var i = 0; i < markers.length; i++) {
-        var lat = +(markers[i].position.lat().toFixed(5));
-        var long = +(markers[i].position.lng().toFixed(5));
-        if((targetLat === lat) && (targetLong === long)){
-          markers[i].setMap(null);
-          markers.splice(i, 1);
-          break;
-        }
+    for (var i = 0; i < markers.length; i++) {
+      var lat = +(markers[i].position.lat().toFixed(5));
+      var long = +(markers[i].position.lng().toFixed(5));
+      if((targetLat === lat) && (targetLong === long)){
+        markers[i].setMap(null);
+        markers.splice(i, 1);
+        break;
       }
-      div.remove();
-      resize(markers);
+    }
+    div.remove();
+    resize(markers);
   }
 
 
 
-    $('.listRestaurants, .listActivities, .listHotels').on('click', '.remove' , removeEvent);
+  $('.listRestaurants, .listActivities, .listHotels').on('click', '.remove' , removeEvent);
 
   //add hotels
-    $('#hotelButton').on('click', function(){
-      var hotel = $('#hotel-choices').val();
-      var hotelId = $('#hotel-choices option:selected').attr('id');
-      $('.current').find('.listHotels').append('<div class="itinerary-item" data-value="' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+  $('#hotelButton').on('click', function(){
+    var hotel = $('#hotel-choices').val();
+    var hotelId = $('#hotel-choices option:selected').attr('id');
+    $('.current').find('.listHotels').append('<div class="itinerary-item" data-value="' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
-      var location = $('#' + hotelId).data('value').split(',');
+    var location = $('#' + hotelId).data('value').split(',');
 
-      drawMarker('hotel', location);
-    });
+    drawMarker('hotel', location);
+  });
   //add restaurants
-    $('#restaurantButton').on('click', function(){
-      var restaurant = $('#restaurant-choices').val();
-      var restaurantId = $('#restaurant-choices option:selected').attr('id');
-      $('.current').find('.listRestaurants').append('<div class="itinerary-item" data-value="' + restaurantId + '"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+  $('#restaurantButton').on('click', function(){
+    var restaurant = $('#restaurant-choices').val();
+    var restaurantId = $('#restaurant-choices option:selected').attr('id');
+    $('.current').find('.listRestaurants').append('<div class="itinerary-item" data-value="' + restaurantId + '"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
-      var location = $('#' + restaurantId).data('value').split(',');
+    var location = $('#' + restaurantId).data('value').split(',');
 
-      drawMarker('restaurant', location);
+    drawMarker('restaurant', location);
 
-    });
+  });
   //add activities
-    $('#activityButton').on('click', function(){
-      var activity = $('#activity-choices').val();
-      var activityId = $('#activity-choices option:selected').attr('id');
-      $('.current').find('.listActivities').append('<div class="itinerary-item" data-value="' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+  $('#activityButton').on('click', function(){
+    var activity = $('#activity-choices').val();
+    var activityId = $('#activity-choices option:selected').attr('id');
+    $('.current').find('.listActivities').append('<div class="itinerary-item" data-value="' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
-      var location = $('#' + activityId).data('value').split(',');
+    var location = $('#' + activityId).data('value').split(',');
 
-      drawMarker('activity', location);
-    });
+    drawMarker('activity', location);
+  });
 
   //add day buttons
-    $('#day-add').on('click', function () {
+  $('#day-add').on('click', function () {
       //get the number of the about to be created button
       var siblingsArray = $(this).siblings();
       var lastIndex = $(siblingsArray[siblingsArray.length - 1]).text();
@@ -208,7 +208,7 @@ $(function initializeMap (){
 
 
   // Remove Page
-   $('#day-title').find('.remove').on('click', function () {
+  $('#day-title').find('.remove').on('click', function () {
     var dayArray = $('#day-span').text().toLowerCase().split(' ');
     var dayNumber = dayArray[1];
     var removingDay = dayArray.join('');
@@ -228,8 +228,8 @@ $(function initializeMap (){
         var button = $(allButtons[i]);
         if (button.text() === dayNumber){
           button.remove();
-        if (i > 0) $(allButtons[i-1]).addClass('current-day');
-        else if (i === 0) $(allButtons[i+1]).addClass('current-day');
+          if (i > 0) $(allButtons[i-1]).addClass('current-day');
+          else if (i === 0) $(allButtons[i+1]).addClass('current-day');
         }
       }
 
