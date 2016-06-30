@@ -14,6 +14,40 @@ router.get('/days', function(req, res, next) {
   })
 })
 
+
+router.get('/days/:id', function(req,res,next){
+  var dayId = req.params.id;
+
+  var responseObj = {};
+  var theDay;
+
+  Day.findOne({
+    where: {
+      id: dayId
+    },
+    include: [Hotel]
+  })
+  .then(function(dayInstance){
+    theDay = dayInstance;
+    responseObj['hotel'] = theDay.hotel;
+    return theDay.getRestaurants({
+      include: [Place]
+    });
+
+  })
+  .then(function(restaurantArr){
+    responseObj['restaurants'] = restaurantArr;
+    return theDay.getActivities({
+      include: [Place]
+    });
+  })
+  .then(function(activityArr){
+    responseObj['activities'] = activityArr;
+    res.send(responseObj);
+  });
+
+});
+
 router.post('/days', function(req, res, next){
   var dayObject = req.body;
 
@@ -27,7 +61,9 @@ router.put('/days/:id/hotel', function(req, res, next){
   var hotelId = (req.body.hotelId).replace(/[^\d.]/g, '');
   var dayId = req.params.id;
   Day.findOne({
-    number: dayId
+    where:{
+      number: dayId
+    }
   }).then(function(result){
     return result.update({
       hotelId: hotelId
@@ -41,7 +77,10 @@ router.put('/days/:id/restaurant', function(req, res, next){
   var restaurantId = (req.body.restaurantId).replace(/[^\d.]/g, '');
   var dayId = req.params.id;
   Day.findOne({
-    number: dayId
+    where:{
+      number: dayId
+    }
+
   }).then(function(result){
     Restaurant.findById(restaurantId)
     .then(function(restaurant){
@@ -56,7 +95,10 @@ router.put('/days/:id/activity', function(req, res, next){
   var activityId = (req.body.activityId).replace(/[^\d.]/g, '');
   var dayId = req.params.id;
   Day.findOne({
-    number: dayId
+    where:{
+      number: dayId
+    }
+
   }).then(function(result){
     Activity.findById(activityId)
     .then(function(activity){
@@ -94,16 +136,16 @@ router.delete('/days/:id/:attraction/:attractionId', function (req, res, next) {
       res.send(hotel.place.location);
       return;
     });
-    
+
   } else {
     if (req.params.attraction === 'restaurant'){
       Attraction = Restaurant;
       deleteFunc = 'removeRestaurant'
-    } 
+    }
     else if (req.params.attraction === 'activity'){
       Attraction = Activity;
       deleteFunc = 'removeActivity'
-    } 
+    }
 
 
 
