@@ -111,7 +111,6 @@ $(function initializeMap (){
   $('#hotelButton').on('click', function(){
     var hotel = $('#hotel-choices').val();
     var hotelId = $('#hotel-choices option:selected').attr('id');
-    $('.current').find('.listHotels').append('<div class="itinerary-item" data-value="' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
     $.ajax({
       method: 'GET',
@@ -126,13 +125,26 @@ $(function initializeMap (){
     });
 
 
+    $.ajax({
+      method: 'PUT',
+      url: '/api/days/'+ $('.current-day').text() +'/hotel',
+      data: {hotelId: hotelId},
+      success: function(){
+        $('.current').find('.listHotels').append('<div class="itinerary-item" data-value="' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+      },
+
+      error: function(error){
+        console.log(error);
+      }
+    });
+
+
 
   });
   //add restaurants
   $('#restaurantButton').on('click', function(){
     var restaurant = $('#restaurant-choices').val();
     var restaurantId = $('#restaurant-choices option:selected').attr('id');
-    $('.current').find('.listRestaurants').append('<div class="itinerary-item" data-value="' + restaurantId + '"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
     $.ajax({
       method: 'GET',
@@ -146,13 +158,26 @@ $(function initializeMap (){
       }
     });
 
+    $.ajax({
+      method: 'PUT',
+      url: '/api/days/'+ $('.current-day').text() +'/restaurant',
+      data: {restaurantId: restaurantId},
+      success: function(){
+        $('.current').find('.listRestaurants').append('<div class="itinerary-item" data-value="' + restaurantId + '"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+      },
+
+      error: function(error){
+        console.log(error);
+      }
+    });
+
 
   });
   //add activities
   $('#activityButton').on('click', function(){
     var activity = $('#activity-choices').val();
     var activityId = $('#activity-choices option:selected').attr('id');
-    $('.current').find('.listActivities').append('<div class="itinerary-item" data-value="' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+
 
     $.ajax({
       method: 'GET',
@@ -162,6 +187,19 @@ $(function initializeMap (){
       },
 
       error:function(error){
+        console.log(error);
+      }
+    });
+
+    $.ajax({
+      method: 'PUT',
+      url: '/api/days/'+ $('.current-day').text() +'/activity',
+      data: {activityId: activityId},
+      success: function(){
+        $('.current').find('.listActivities').append('<div class="itinerary-item" data-value="' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+      },
+
+      error: function(error){
         console.log(error);
       }
     });
@@ -179,11 +217,27 @@ $(function initializeMap (){
 
       var newDay = currentIndex;
 
-      var template = '<div class="panel-body day' + newDay + ' hidden"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="day' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day' + newDay + 'Activities""></ul></div></div>';
+      $.ajax({
+        method: 'POST',
+        url: '/api/days',
+        data: {number: newDay},
 
-      $('#itinerary').append(template);
+        success: function(){
+          if(newDay === 1) var status = 'current';
+          else var status = 'hidden';
 
-      $('.day' + newDay).find('.listActivities, .listRestaurants, .listHotels').on('click', '.remove', removeEvent);
+          var template = '<div class="panel-body day' + newDay + ' ' + status +'"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="day' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day' + newDay + 'Activities""></ul></div></div>';
+
+          $('#itinerary').append(template);
+          $('.day' + newDay).find('.listActivities, .listRestaurants, .listHotels').on('click', '.remove', removeEvent);
+        },
+
+        error: function(error){
+          console.log(error);
+        }
+      });
+
+
 
     });
 

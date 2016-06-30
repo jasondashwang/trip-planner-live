@@ -4,7 +4,7 @@ var Day = require ('../../models/day');
 var Place = require ('../../models/place');
 var Activity = require ('../../models/activity');
 var Restaurant = require ('../../models/restaurant');
-var Hotel = require ('../../models/hotel'); 
+var Hotel = require ('../../models/hotel');
 
 router.get('/days', function(req, res, next) {
   Day.findAll({
@@ -25,13 +25,47 @@ router.post('/days', function(req, res, next){
 
 router.put('/days/:id/hotel', function(req, res, next){
   var hotelId = (req.body.hotelId).replace(/[^\d.]/g, '');
-  console.log(hotelId)
-  // var id = req.params.id;
-  // Day.findById(id)
-  //   .then(function(result){
-  //     result.update()
-  //   })
-  res.end()
+  var dayId = req.params.id;
+  Day.findOne({
+    number: dayId
+  }).then(function(result){
+    return result.update({
+      hotelId: hotelId
+    });
+  }).then(function(){
+    res.end();
+  });
 })
+
+router.put('/days/:id/restaurant', function(req, res, next){
+  var restaurantId = (req.body.restaurantId).replace(/[^\d.]/g, '');
+  var dayId = req.params.id;
+  Day.findOne({
+    number: dayId
+  }).then(function(result){
+    Restaurant.findById(restaurantId)
+    .then(function(restaurant){
+      return result.addRestaurant(restaurant);
+    });
+  }).then(function(){
+    res.end();
+  })
+})
+
+router.put('/days/:id/activity', function(req, res, next){
+  var activityId = (req.body.activityId).replace(/[^\d.]/g, '');
+  var dayId = req.params.id;
+  Day.findOne({
+    number: dayId
+  }).then(function(result){
+    Activity.findById(activityId)
+    .then(function(activity){
+      return result.addActivity(activity);
+    });
+  }).then(function(){
+    res.end();
+  });
+});
+
 
 module.exports = router;

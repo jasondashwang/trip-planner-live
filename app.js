@@ -2,7 +2,7 @@ var express = require('express');
 var morgan = require('morgan');
 var bodyParser = require('body-parser');
 var swig = require('swig');
-
+var seed = require('./seed');
 var db = require('./models');
 
 var app = express();
@@ -51,11 +51,11 @@ app.use(function (err, req, res, next) {
 var port = 3000;
 app.listen(port, function () {
   console.log('The server is listening closely on port', port);
-  db.sync()
-  .then(function () {
-    console.log('Synchronated the database');
-  })
-  .catch(function (err) {
-    console.error('Trouble right here in River City', err, err.stack);
-  });
+  seed()
+  // .then(function () {
+  //   console.log('Synchronated the database');
+  // })
+  // .catch(function (err) {
+  //   console.error('Trouble right here in River City', err, err.stack);
+  // });
 });
