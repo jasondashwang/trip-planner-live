@@ -15,4 +15,13 @@ router.get('/hotels' , function (req, res, next) {
 
 });
 
+router.get('/hotels/:id' , function (req, res, next ) { 
+  var id = req.params.id; 
+
+  Hotel.findById(id)
+    .then(function(result) {
+      res.send(result);
+    })
+});
+
 module.exports = router;
