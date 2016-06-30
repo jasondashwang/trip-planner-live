@@ -18,7 +18,12 @@ router.get('/hotels' , function (req, res, next) {
 router.get('/hotels/:id' , function (req, res, next ) { 
   var id = (req.params.id).replace(/[^\d.]/g, '');
 
-  Hotel.findById(id)
+  Hotel.findOne({
+    where:{
+      id: id,
+    },
+    include: [Place]
+  })
     .then(function(result) {
       res.send(result);
     })
