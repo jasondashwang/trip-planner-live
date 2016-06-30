@@ -88,9 +88,9 @@ $(function initializeMap (){
   // Jquery Stuff Below
   function removeEvent(){
     var div = $(this).parent();
-  
+
     var id = div.data('value');
-    
+
     var typeOfAttraction = id.match(/[a-zA-Z]/g).join('');
     var attractionId =  id.replace(/[^\d.]/g, '');
     var dayId = $('.current-day').text();
@@ -349,11 +349,46 @@ $(function initializeMap (){
     var dayArray = $('#day-span').text().toLowerCase().split(' ');
     var removeDayId = dayArray[1];
 
+
+
     var $dayButtonsAfterRemove = $('.day-buttons').children().slice((+removeDayId), -1);
-    console.log($dayButtonsAfterRemove)
-    for (var i = 0; i < $dayButtonsAfterRemove.length - 1; i++) { 
-      
-    }
+
+    $('#btnday' + removeDayId).remove();
+    $.ajax({
+      method: 'DELETE',
+      url: '/api/days/' + removeDayId,
+
+      success: function (response){
+        var numbers = [];
+        for (var i = 0; i < $dayButtonsAfterRemove.length; i++) {
+          var $day = $($dayButtonsAfterRemove[i]);
+          var dayId =  +($day.attr('id').replace(/[^\d.]/g, ''));
+          numbers.push(dayId);
+
+          $day.attr('id', 'btnday' + (dayId - 1));
+          $day.text(dayId-1);
+        }
+
+        $.ajax({
+          method: 'PUT',
+          url: '/api/days',
+          data: {toChange: numbers},
+          success: function(response){
+            console.log('success');
+          },
+
+          error: function(newError){
+            console.log(newError);
+          }
+        });
+      },
+
+      error: function (error){
+        console.log(error);
+      }
+    });
+
+
 
 
     $('.current-day').trigger('click');

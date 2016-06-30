@@ -23,7 +23,7 @@ router.get('/days/:id', function(req,res,next){
 
   Day.findOne({
     where: {
-      id: dayId
+      number: dayId
     },
     include: [Hotel]
   })
@@ -107,6 +107,47 @@ router.put('/days/:id/activity', function(req, res, next){
   }).then(function(){
     res.end();
   });
+});
+
+
+router.put('/days', function(req,res,next){
+  var numbers = req.body['toChange[]'];
+  var promiseArr = [];
+  numbers.forEach(function(number){
+    promiseArr.push(Day.findOne({
+      where: {
+        number: number
+      }
+    }).then(function(dayInstance){
+      return dayInstance.update({
+        number: number - 1
+      });
+    }));
+
+  });
+
+  Promise.all(promiseArr).then(function(arr){
+    res.end();
+  });
+});
+
+
+
+router.delete('/days/:id', function(req,res, next){
+  var dayId = req.params.id;
+
+  Day.findOne({
+    where: {
+      number: dayId
+    }
+  })
+  .then(function(dayInstance){
+    return dayInstance.destroy();
+  })
+  .then(function(){
+    res.end();
+  });
+
 });
 
 
