@@ -68,4 +68,56 @@ router.put('/days/:id/activity', function(req, res, next){
 });
 
 
+router.delete('/days/:id/:attraction/:attractionId', function (req, res, next) {
+  var Attraction,deleteFunc
+  var dayId = req.params.id;
+  var attractionId = req.params.attractionId;
+
+  if (req.params.attraction === 'hotel'){
+    Attraction = Hotel;
+    Day.findOne({
+      number: dayId
+    }).then(function(result){
+      return result.update({
+        hotelId: null
+      });
+    })
+    .then(function(){
+      return Hotel.findOne({
+        where: {
+          id: attractionId
+        },
+        include: [Place]
+      })
+    })
+    .then(function(hotel){
+      res.send(hotel.place.location);
+      return;
+    });
+    
+  } else {
+    if (req.params.attraction === 'restaurant'){
+      Attraction = Restaurant;
+      deleteFunc = 'removeRestaurant'
+    } 
+    else if (req.params.attraction === 'activity'){
+      Attraction = Activity;
+      deleteFunc = 'removeActivity'
+    } 
+
+
+
+    Day.findOne({
+      number: dayId
+    }).then(function(result){
+      Attraction.findById(attractionId, { include:[Place] })
+      .then(function(instance){
+        res.send(instance.place.location);
+        return result[deleteFunc](instance);
+      });
+    }).catch(next);
+  }
+
+});
+
 module.exports = router;

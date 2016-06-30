@@ -84,23 +84,35 @@ $(function initializeMap (){
     var div = $(this).parent();
 
     var id = div.data('value');
+    var typeOfAttraction = id.match(/[a-zA-Z]/g).join('');
+    var attractionId =  id.replace(/[^\d.]/g, '');
+    var dayId = $('.current-day').text();
 
-    var location = $('#'+id).data('value').split(',');
+    
+    
+    $.ajax({
+      method: 'DELETE',
+      url: '/' + ( ['api','days',dayId,typeOfAttraction,attractionId].join('/') ),
+      success: function (location) {
+       var targetLat = +((+(location[0])).toFixed(5));
+       var targetLong = +((+(location[1])).toFixed(5));
 
-    var targetLat = +((+(location[0])).toFixed(5));
-    var targetLong = +((+(location[1])).toFixed(5));
-
-    for (var i = 0; i < markers.length; i++) {
-      var lat = +(markers[i].position.lat().toFixed(5));
-      var long = +(markers[i].position.lng().toFixed(5));
-      if((targetLat === lat) && (targetLong === long)){
-        markers[i].setMap(null);
-        markers.splice(i, 1);
-        break;
+       for (var i = 0; i < markers.length; i++) {
+        var lat = +(markers[i].position.lat().toFixed(5));
+        var long = +(markers[i].position.lng().toFixed(5));
+        if((targetLat === lat) && (targetLong === long)){
+          markers[i].setMap(null);
+          markers.splice(i, 1);
+          break;
+        }
       }
-    }
-    div.remove();
-    resize(markers);
+      div.remove();
+      resize(markers);
+
+    },
+    error: function(error) { console.log(error); }
+  });
+
   }
 
 

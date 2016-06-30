@@ -29,4 +29,6 @@ router.get('/hotels/:id' , function (req, res, next ) {
   })
 });
 
+
+
 module.exports = router;
