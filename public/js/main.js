@@ -88,8 +88,9 @@ $(function initializeMap (){
   // Jquery Stuff Below
   function removeEvent(){
     var div = $(this).parent();
-
+  
     var id = div.data('value');
+    
     var typeOfAttraction = id.match(/[a-zA-Z]/g).join('');
     var attractionId =  id.replace(/[^\d.]/g, '');
     var dayId = $('.current-day').text();
@@ -156,7 +157,7 @@ $(function initializeMap (){
       url: '/api/days/'+ $('.current-day').text() +'/hotel',
       data: {hotelId: hotelId},
       success: function(){
-        $('.listHotels').append('<div class="itinerary-item"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+        $('.listHotels').append('<div class="itinerary-item" data-value = "' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
       },
 
       error: function(error){
@@ -189,7 +190,7 @@ $(function initializeMap (){
       url: '/api/days/'+ $('.current-day').text() +'/restaurant',
       data: {restaurantId: restaurantId},
       success: function(){
-        $('.listRestaurants').append('<div class="itinerary-item"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+        $('.listRestaurants').append('<div class="itinerary-item" data-value = "' + restaurantId + '"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
       },
 
       error: function(error){
@@ -222,7 +223,7 @@ $(function initializeMap (){
       url: '/api/days/'+ $('.current-day').text() +'/activity',
       data: {activityId: activityId},
       success: function(){
-        $('.listActivities').append('<div class="itinerary-item"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
+        $('.listActivities').append('<div class="itinerary-item" data-value = "' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
       },
 
       error: function(error){
@@ -291,7 +292,7 @@ $(function initializeMap (){
            attractionId = hotel.id;
            attractionName = hotel.name;
 
-           var template = '<div class="itinerary-item"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
+           var template = '<div class="itinerary-item" data-value = "hotel' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
 
            $('.listHotels').append(template);
 
@@ -312,24 +313,24 @@ $(function initializeMap (){
              response.restaurants.forEach(function(restaurant){
               attractionId = restaurant.id;
               attractionName = restaurant.name;
-              template = '<div class="itinerary-item"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
+              template = '<div class="itinerary-item" data-value = "restaurant' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
 
               $('.listRestaurants').append(template);
 
               drawMarker('restaurant', restaurant.place.location);
-             });
+            });
            }
 
            if(response.activities.length > 0){
              response.activities.forEach(function(activity){
               attractionId = activity.id;
               attractionName = activity.name;
-              template = '<div class="itinerary-item"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
+              template = '<div class="itinerary-item" data-value = "activity' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
 
               $('.listActivities').append(template);
 
               drawMarker('activity', activity.place.location);
-             });
+            });
            }
 
          }
@@ -339,38 +340,6 @@ $(function initializeMap (){
         console.log(error);
       }
     });
-
-
-      // var newDay = '.day' + $target.text();
-
-      // var targetPanel = $(newDay).removeClass('hidden').addClass('current');
-      // var currentDay = 'Day ' + $target.text();
-      // $('#day-span').text(currentDay);
-
-      // var hotelArr = targetPanel.find('.listHotels').children();
-      // var restaurantArr = targetPanel.find('.listRestaurants').children();
-      // var activityArr = targetPanel.find('.listActivities').children();
-
-      // for (var i = 0; i < hotelArr.length; i++) {
-      //   var $hotel = $(hotelArr[i]);
-      //   var id = $hotel.data('value');
-      //   var location = $('#'+ id).data('value').split(',');
-      //   drawMarker('hotel', location);
-      // }
-
-      // for (var i = 0; i < restaurantArr.length; i++) {
-      //   var $restaurant = $(restaurantArr[i]);
-      //   var id = $restaurant.data('value');
-      //   var location = $('#'+ id).data('value').split(',');
-      //   drawMarker('restaurant', location);
-      // }
-
-      // for (var i = 0; i < activityArr.length; i++) {
-      //   var $activity = $(activityArr[i]);
-      //   var id = $activity.data('value');
-      //   var location = $('#'+ id).data('value').split(',');
-      //   drawMarker('activity', location);
-      // }
     }
   });
 
@@ -378,43 +347,15 @@ $(function initializeMap (){
   // Remove Page
   $('#day-title').find('.remove').on('click', function () {
     var dayArray = $('#day-span').text().toLowerCase().split(' ');
-    console.log(dayArray);
-    var dayNumber = dayArray[1];
-    var removingDay = dayArray.join('');
+    var removeDayId = dayArray[1];
 
-    $('.' + removingDay).remove();
-    var allButtons = $('.day-buttons').children();
-
-    if (allButtons.length === 2){
-      var newDay = 1;
-      var template = '<div class="panel-body day' + newDay + ' current"><div><h4>My Hotel</h4><ul class="list-group listHotels" id="day' + newDay + 'Hotels"></ul></div><div><h4>My Restaurants</h4><ul class="list-group listRestaurants" id="day' + newDay + 'Restaurants"></ul></div><div><h4>My Activities</h4><ul class="list-group listActivities" id="day' + newDay + 'Activities""></ul></div></div>';
-      $('.day1').remove();
-      $('#itinerary').append(template);
-      $('.day' + newDay).find('.listActivities, .listRestaurants, .listHotels').on('click', '.remove', removeEvent);
-
-    } else {
-      for (var i = 0; i < allButtons.length; i ++) {
-        var button = $(allButtons[i]);
-        if (button.text() === dayNumber){
-          button.remove();
-          if (i > 0) $(allButtons[i-1]).addClass('current-day');
-          else if (i === 0) $(allButtons[i+1]).addClass('current-day');
-        }
-      }
-
-      for (var z = +dayNumber; z < allButtons.length-1; z++){
-        var button = $(allButtons[z]);
-        var buttonText = +(button.text()) - 1;
-        button.text(buttonText);
-        var $targetPanel = $('.day' + (z+1));
-        $targetPanel.find('#day' + (z+1) + 'Hotels').removeAttr('id').attr('id', 'day' + z + 'Hotels');
-        $targetPanel.find('#day' + (z+1) + 'Restaurants').removeAttr('id').attr('id', 'day' + z + 'Restaurants');
-        $targetPanel.find('#day' + (z+1) + 'Activities').removeAttr('id').attr('id', 'day' + z + 'Activities');
-        $targetPanel.removeClass('day'+ (z+1)).addClass('day'+ z);
-      }
-
-
+    var $dayButtonsAfterRemove = $('.day-buttons').children().slice((+removeDayId), -1);
+    console.log($dayButtonsAfterRemove)
+    for (var i = 0; i < $dayButtonsAfterRemove.length - 1; i++) { 
+      
     }
+
+
     $('.current-day').trigger('click');
   });
 
