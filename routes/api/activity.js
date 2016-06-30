@@ -15,4 +15,18 @@ router.get('/activities' , function (req, res, next) {
   });
 
 });
+
+router.get('/activities/:id' , function (req, res, next ) { 
+  var id = (req.params.id).replace(/[^\d.]/g, '');
+
+  Activity.findOne({
+    where:{
+      id: id,
+    },
+    include: [Place]
+  })
+    .then(function(result) {
+      res.send(result);
+    })
+});
 module.exports = router;

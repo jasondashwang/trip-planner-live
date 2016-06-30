@@ -15,4 +15,18 @@ router.get('/restaurants' , function (req, res, next) {
 
 });
 
+router.get('/restaurants/:id' , function (req, res, next ) { 
+  var id = (req.params.id).replace(/[^\d.]/g, '');
+
+  Restaurant.findOne({
+    where:{
+      id: id,
+    },
+    include: [Place]
+  })
+    .then(function(result) {
+      res.send(result);
+    })
+});
+
 module.exports = router;
