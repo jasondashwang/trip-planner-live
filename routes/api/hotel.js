@@ -16,7 +16,7 @@ router.get('/hotels' , function (req, res, next) {
 });
 
 router.get('/hotels/:id' , function (req, res, next ) { 
-  var id = req.params.id; 
+  var id = (req.params.id).replace(/[^\d.]/g, '');
 
   Hotel.findById(id)
     .then(function(result) {
