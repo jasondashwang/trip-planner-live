@@ -24,9 +24,9 @@ router.get('/restaurants/:id' , function (req, res, next ) {
     },
     include: [Place]
   })
-    .then(function(result) {
-      res.send(result);
-    })
+  .then(function(result) {
+    res.send(result);
+  })
 });
 
 module.exports = router;
