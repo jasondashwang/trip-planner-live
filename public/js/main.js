@@ -113,9 +113,20 @@ $(function initializeMap (){
     var hotelId = $('#hotel-choices option:selected').attr('id');
     $('.current').find('.listHotels').append('<div class="itinerary-item" data-value="' + hotelId + '"><span class="title">' + hotel + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
-    var location = $('#' + hotelId).data('value').split(',');
+    $.ajax({
+      method: 'GET',
+      url: '/api/hotels/' + hotelId,
+      success: function(response){
+        drawMarker('hotel', response.place.location);
+      },
 
-    drawMarker('hotel', location);
+      error:function(error){
+        console.log(error);
+      }
+    });
+
+
+
   });
   //add restaurants
   $('#restaurantButton').on('click', function(){
@@ -123,9 +134,18 @@ $(function initializeMap (){
     var restaurantId = $('#restaurant-choices option:selected').attr('id');
     $('.current').find('.listRestaurants').append('<div class="itinerary-item" data-value="' + restaurantId + '"><span class="title">' + restaurant + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
-    var location = $('#' + restaurantId).data('value').split(',');
+    $.ajax({
+      method: 'GET',
+      url: '/api/restaurants/' + restaurantId,
+      success: function(response){
+        drawMarker('restaurant', response.place.location);
+      },
 
-    drawMarker('restaurant', location);
+      error:function(error){
+        console.log(error);
+      }
+    });
+
 
   });
   //add activities
@@ -134,9 +154,17 @@ $(function initializeMap (){
     var activityId = $('#activity-choices option:selected').attr('id');
     $('.current').find('.listActivities').append('<div class="itinerary-item" data-value="' + activityId + '"><span class="title">' + activity + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>');
 
-    var location = $('#' + activityId).data('value').split(',');
+    $.ajax({
+      method: 'GET',
+      url: '/api/activities/' + activityId,
+      success: function(response){
+        drawMarker('activity', response.place.location);
+      },
 
-    drawMarker('activity', location);
+      error:function(error){
+        console.log(error);
+      }
+    });
   });
 
   //add day buttons
