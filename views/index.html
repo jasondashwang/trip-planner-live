@@ -16,27 +16,21 @@
           <div>
             <h4>Hotels</h4>
             <select data-type="hotel" id="hotel-choices">
-              {% for hotel in hotels %}
-              <option id="hotel{{hotel.id}}" data-value='{{ hotel.place.location }}'>{{ hotel.name }}</option>
-              {% endfor %}
+             <!-- content generated with javascript-->
             </select>
             <button id="hotelButton" data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
           </div>
           <div>
             <h4>Restaurants</h4>
             <select data-type="restaurant" id="restaurant-choices">
-              {% for restaurant in restaurants %}
-              <option id="restaurant{{restaurant.id}}" data-value='{{ restaurant.place.location }}'>{{ restaurant.name }}</option>
-              {% endfor %}
+            <!-- content generated with javascript-->
             </select>
             <button id="restaurantButton" data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
           </div>
           <div>
             <h4>Activities</h4>
             <select data-type="activity" id="activity-choices">
-              {% for activity in activities %}
-              <option id="activity{{activity.id}}" data-value='{{ activity.place.location }}'>{{ activity.name }}</option>
-              {% endfor %}
+             <!-- content generated with javascript-->
             </select>
             <button id="activityButton" data-action="add" class="btn btn-primary btn-circle pull-right">+</button>
           </div>
