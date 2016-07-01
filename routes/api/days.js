@@ -110,21 +110,20 @@ router.put('/days/:id/activity', function(req, res, next){
 });
 
 
-router.put('/days', function(req,res,next){
-  var numbers = req.body['toChange[]'];
+router.post('/removeDay', function(req,res,next){
+  var numbers = req.body;
   var promiseArr = [];
-  numbers.forEach(function(number){
+  for (var i = 0; i < numbers.length; i++) {
     promiseArr.push(Day.findOne({
       where: {
-        number: number
+        number: numbers[i]
       }
     }).then(function(dayInstance){
       return dayInstance.update({
-        number: number - 1
+        number: numbers[i] - 1
       });
     }));
-
-  });
+  }
 
   Promise.all(promiseArr).then(function(arr){
     res.end();
@@ -144,7 +143,7 @@ router.delete('/days/:id', function(req,res, next){
   .then(function(dayInstance){
     return dayInstance.destroy();
   })
-  .then(function(){
+  .then(function(moo){
     res.end();
   });
 

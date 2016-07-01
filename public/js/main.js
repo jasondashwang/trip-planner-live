@@ -123,6 +123,32 @@ $(function initializeMap (){
   }
 
 
+  function shiftDays(numbers){
+    var send = {};
+    for (var i = numbers.length - 1; i >= 0; i--) {
+      send[i] = numbers[i];
+    }
+
+    $.ajax({
+      method: 'POST',
+      url: '/api/removeDay',
+      data: send,
+      success: function(response){
+        if ($('.day-buttons').children().length > 1){
+          $('#btnday1').trigger('click');
+        }
+        else {
+          $('#day-add').trigger('click');
+        }
+      },
+
+      error: function(newError){
+        console.log(newError);
+      }
+    });
+  }
+
+
   function clearItinerary(){
     $('#itineraryItems').find('.listHotels').text('');
     $('#itineraryItems').find('.listRestaurants').text('');
@@ -308,32 +334,33 @@ $(function initializeMap (){
             }
 
           });
-
-           if(response.restaurants.length > 0){
-             response.restaurants.forEach(function(restaurant){
-              attractionId = restaurant.id;
-              attractionName = restaurant.name;
-              template = '<div class="itinerary-item" data-value = "restaurant' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
-
-              $('.listRestaurants').append(template);
-
-              drawMarker('restaurant', restaurant.place.location);
-            });
-           }
-
-           if(response.activities.length > 0){
-             response.activities.forEach(function(activity){
-              attractionId = activity.id;
-              attractionName = activity.name;
-              template = '<div class="itinerary-item" data-value = "activity' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
-
-              $('.listActivities').append(template);
-
-              drawMarker('activity', activity.place.location);
-            });
-           }
-
          }
+
+         if(response.restaurants.length > 0){
+           response.restaurants.forEach(function(restaurant){
+            attractionId = restaurant.id;
+            attractionName = restaurant.name;
+            template = '<div class="itinerary-item" data-value = "restaurant' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
+
+            $('.listRestaurants').append(template);
+
+            drawMarker('restaurant', restaurant.place.location);
+          });
+         }
+
+         if(response.activities.length > 0){
+           response.activities.forEach(function(activity){
+            attractionId = activity.id;
+            attractionName = activity.name;
+            template = '<div class="itinerary-item" data-value = "activity' + attractionId + '"><span class="title">' + attractionName + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>';
+
+            $('.listActivities').append(template);
+
+            drawMarker('activity', activity.place.location);
+          });
+         }
+
+
 
        },
        error: function(error){
@@ -345,10 +372,12 @@ $(function initializeMap (){
 
 
   // Remove Page
-  $('#day-title').find('.remove').on('click', function () {
+  $('#day-title').find('.remove').on('click', function (e) {
+
     var dayArray = $('#day-span').text().toLowerCase().split(' ');
     var removeDayId = dayArray[1];
 
+    e.preventDefault();
 
 
     var $dayButtonsAfterRemove = $('.day-buttons').children().slice((+removeDayId), -1);
@@ -369,18 +398,9 @@ $(function initializeMap (){
           $day.text(dayId-1);
         }
 
-        $.ajax({
-          method: 'PUT',
-          url: '/api/days',
-          data: {toChange: numbers},
-          success: function(response){
-            console.log('success');
-          },
+        shiftDays(numbers);
 
-          error: function(newError){
-            console.log(newError);
-          }
-        });
+
       },
 
       error: function (error){
@@ -389,11 +409,14 @@ $(function initializeMap (){
     });
 
 
+    e.preventDefault();
 
 
-    $('.current-day').trigger('click');
+
   });
 
+
+  // Start page with one day
   $('#day-add').trigger('click');
 
 
